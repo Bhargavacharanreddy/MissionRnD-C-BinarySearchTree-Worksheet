@@ -27,15 +27,36 @@ Note : Return Null for invalid Inputs
 Note : Donot create a new BST .
 */
 #include <stdlib.h>
+#include<malloc.h>
+#include<stdio.h>
 struct node{
 	struct node * left;
 	int data;
 	struct node *right;
 };
+struct node* newNodes(int data)
+{
+	struct node* temp = (struct node*)malloc(sizeof(struct node));
+	temp->data = data;
+	temp->left = NULL;
+	temp->right = NULL;
+	return temp;
+}
 
-
-struct node * convert_array_to_bst(int *arr, int len){
-	
-	return NULL;
+struct node* convert_to_BST(int *arr, int i, int j)
+{
+	if (i > j)/*invalid conditions*/
+		return NULL;
+	int mid = (i + j) / 2;/*calculatiing the middle element index*/
+	struct node *root = newNodes(arr[mid]);
+	root->left = convert_to_BST(arr, i, mid - 1);
+	root->right = convert_to_BST(arr, mid + 1, j);
+	return root;
+}
+struct node * convert_array_to_bst(int *arr, int len)
+{
+	if (arr == NULL || len < 0)
+		return NULL;
+	return (convert_to_BST(arr, 0, len - 1));
 }
 
