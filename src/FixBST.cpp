@@ -26,12 +26,62 @@ Nodes 1 and 20 need to be fixed here .
 #include <stdlib.h>
 
 
-struct node{
+struct node
+{
 	struct node * left;
 	int data;
 	struct node *right;
 };
 
-void fix_bst(struct node *root){
+struct node * prev = NULL;  
+int index = 0;
+struct node *nodes[2];
 
+
+void traverse(struct node *root, struct node *arr[])  
+{
+	if (root->left != NULL) 
+		traverse(root->left, arr);
+   if (prev != NULL)
+		if (index != 1)
+		{
+
+			if (root->data < prev->data)
+			{
+				arr[index++] = prev;
+				arr[index] = root;
+			}
+			else
+			{
+				prev = root;
+			}
+		}
+      else if (index == 1)
+		{
+			if (root->data < prev->data){
+
+				arr[index] = root;
+				return;
+			}
+
+		}
+
+	prev = root;
+
+	if (root->right != NULL)	
+		traverse(root->right, arr);
+}
+
+
+
+void fix_bst(struct node *root)
+{
+
+      if (root == NULL)
+		return;
+     prev = NULL; index = 0;
+	 traverse(root, nodes);
+	 int x = nodes[1]->data;/*swapping the data values*/
+	 nodes[1]->data = nodes[0]->data;
+	 nodes[0]->data = x;
 }
