@@ -22,16 +22,63 @@ Note : Return -1 for Invalid Cases .
 
 #include <stdlib.h>
 #include <stdio.h>
-
-struct node{
+#include<math.h>
+struct node
+{
 	struct node * left;
 	int data;
 	struct node *right;
 };
+int arr[100] = { 0 };
+int heightOfBst(struct node *root)
+{
+	if (root == NULL)
+		return 0;
+	else
+	{
+		/* compute the depth of each subtree */
+		int lDepth = heightOfBst(root->left);
+		int rDepth = heightOfBst(root->right);
+
+		/* use the larger one */
+		if (lDepth > rDepth)
+			return(lDepth + 1);
+		else return(rDepth + 1);
+	}
+
+}
+
+
+void nextLevel(struct node *root, int *arr, int *index, int level, int curlevel)
+{
+	if (curlevel == level)
+	{// if specified level met , copy that value into the array
+		arr[(*index)++] = root->data;
+		return;
+	}
+
+	if (root->right != NULL)	
+		nextLevel(root->right, arr, index, level, curlevel + 1);
+	if (root->left != NULL)		
+		nextLevel(root->left, arr, index, level, curlevel + 1);
+
+}
+
 
 
 
 int* BSTRighttoLeftRows(struct node* root)
 {
-    return NULL;
+
+	if (root == NULL) 
+		return NULL;
+
+	int pos = 0,size = 0, level = 0;;
+	level= heightOfBst(root);
+// for each level, add the node values to array
+   for (int i = 0; i < level; i++)
+	{
+		nextLevel(root, arr, &pos, i, 0);
+	}
+	return arr;
 }
