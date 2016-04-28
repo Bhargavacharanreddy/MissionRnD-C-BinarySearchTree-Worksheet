@@ -38,8 +38,67 @@ struct node{
   int data;
   struct node *right;
 };
+void findLeafDown(node *root, int lev, int *minDist)
+{
+	
+	if (root == NULL)
+		return;
 
+	
+	if (root->left == NULL && root->right == NULL)
+	{
+		if (lev < (*minDist))
+			*minDist = lev;
+		return;
+	}
+
+	
+	findLeafDown(root->left, lev + 1, minDist);
+	findLeafDown(root->right, lev + 1, minDist);
+}
+int findThroughParent(node *root, node *x, int *minDist)
+{
+	
+	if (root == NULL) return -1;
+	if (root == x) return 0;
+
+	
+	int l = findThroughParent(root->left, x, minDist);
+
+	
+	if (l != -1)
+	{
+		
+		findLeafDown(root->right, l + 2, minDist);
+		return l + 1;
+	}
+
+	
+	int r = findThroughParent(root->right, x, minDist);
+
+	
+	if (r != -1)
+	{
+		
+		findLeafDown(root->left, r + 2, minDist);
+		return r + 1;
+	}
+
+	return -1;
+}
 int get_closest_leaf_distance(struct node *root, struct node *temp)
 {
-  return -1;
+	if (root == NULL || temp == NULL)
+		return -1;
+	int minDist = 13134;
+
+	
+	findLeafDown(temp, 0, &minDist);
+
+	
+	findThroughParent(root, temp, &minDist);
+
+	return minDist;
+	
+	return -1;
 }
